@@ -8,6 +8,105 @@
   font-family: "Poppins", sans-serif;
 }
 
+button {
+    font-size: 16px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    position: relative;
+}
+
+#closeModal {
+    position: absolute;
+    top: 0.1px;
+    right: 5px;
+    font-size: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #ff0000;
+}
+
+#surveyModal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    flex-direction: column;
+    max-width: 400px;
+}
+
+#closeSurveyModal {
+    position: absolute;
+    top: 1px;
+    right: 7px;
+    font-size: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #ff0000;
+}
+
+#surveyModal h2 {
+    margin-bottom: 20px;
+}
+
+#surveyQuestion {
+    width: 85%;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.predefined-answers {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+    .predefined-answers p {
+        margin: 10px 0;
+    }
+
+#startSurvey {
+    background-color: #2f80ec;
+    color: #fff;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#startSurvey:hover {
+   background-color: #1c5da1;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -70,6 +169,7 @@ video {
 }
 
 .options__right {
+  display: flex;
   margin-left: auto;
 }
 
@@ -160,6 +260,13 @@ video {
 
 #showChat {
   display: none;
+}
+
+#createInteractive {
+    font-size: 18px;
+    padding: 10px 10px;
+    width: auto;
+    height: auto;
 }
 
 .header__back {

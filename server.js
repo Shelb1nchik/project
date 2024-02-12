@@ -33,6 +33,9 @@ io.on("connection", (socket) => {
     socket.on("message", (message) => {
       io.to(roomId).emit("createMessage", message, userName);
     });
+    socket.on('createSurvey', (questionData) => {
+      io.to(roomId).emit('receiveSurvey', questionData);
+    });
   });
 });
 

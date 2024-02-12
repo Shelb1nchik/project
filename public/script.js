@@ -149,6 +149,65 @@ stopVideo.addEventListener("click", () => {
   }
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+    const createInteractiveButton = document.getElementById('createInteractive');
+    const overlay = document.getElementById('overlay');
+    const closeModalButton = document.getElementById('closeModal');
+    const createQuizButton = document.getElementById('createQuiz');
+    const createSurveyButton = document.getElementById('createSurvey');
+    const surveyModal = document.getElementById('surveyModal');
+    const closeSurveyModalButton = document.getElementById('closeSurveyModal');
+    const startSurveyButton = document.getElementById('startSurvey');
+
+    const surveyQuestionInput = document.getElementById('surveyQuestion');
+    const predefinedAnswers = document.querySelectorAll('.predefined-answers p');
+
+    const socket = io();
+
+    createInteractiveButton.addEventListener('click', () => {
+        overlay.style.display = 'flex';
+    });
+
+    closeModalButton.addEventListener('click', () => {
+        overlay.style.display = 'none';
+    });
+
+    createQuizButton.addEventListener('click', () => {
+        alert('Creating Quiz...');
+        overlay.style.display = 'none';
+    });
+
+    createSurveyButton.addEventListener('click', () => {
+        surveyModal.style.display = 'flex';
+    });
+
+    closeSurveyModalButton.addEventListener('click', () => {
+        surveyModal.style.display = 'none';
+    });
+
+    startSurveyButton.addEventListener('click', () => {
+        const question = surveyQuestionInput.value;
+
+        if (!question) {
+            alert('Введите вопрос перед запуском опроса.');
+            return;
+        }
+
+        const options = Array.from(predefinedAnswers).map(answer => answer.textContent.trim());
+
+        const surveyData = {
+            question,
+            options
+        };
+
+        socket.emit('startSurvey', surveyData);
+
+        overlay.style.display = 'none';
+        surveyModal.style.display = 'none';
+    });
+
+});
+
 inviteButton.addEventListener("click", (e) => {
   prompt(
     "Copy this link and send it to people you want to meet with",

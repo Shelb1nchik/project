@@ -44,6 +44,26 @@
           <div id="inviteButton" class="options__button">
             <i class="fas fa-user-plus"></i>
           </div>
+          <div id="createInteractive" class="options__button">Create Interactive</div>
+          <div class="overlay" id="overlay">
+            <div class="modal">
+              <button id="closeModal" class="close-button">&times;</button>
+              <h2>Select Interactive Type</h2>
+              <button id="createQuiz">Create Quiz</button>
+              <button id="createSurvey">Create Survey</button>
+              <div id="surveyModal">
+                <button id="closeSurveyModal" class="close-button">&times;</button>
+                <h2>Create Survey</h2>
+                <input type="text" id="surveyQuestion" placeholder="Enter your question">
+                <div class="predefined-answers">
+                  <p>Yes</p>
+                  <p>Almost</p>
+                  <p>No</p>
+                </div>
+                <button id="startSurvey">Start a survey</button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
