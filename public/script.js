@@ -76,6 +76,26 @@ navigator.mediaDevices
     });
   });
 
+const startScreenShareButton = document.getElementById("startScreenShareButton");
+
+startScreenShareButton.addEventListener("click", () => {
+  navigator.mediaDevices
+    .getDisplayMedia({
+      video: true,
+    })
+    .then((screenStream) => {
+      myVideoStream = screenStream;
+      addVideoStream(myVideo, screenStream);
+    })
+    .catch((error) => {
+      console.error("Error starting screen share:", error);
+    });
+
+    socket.on("user-connected", (userId) => {
+        connectToNewUser(userId, screenStream);
+    });
+});
+
 const connectToNewUser = (userId, stream) => {
   console.log('I call someone' + userId);
   const call = peer.call(userId, stream);
@@ -151,45 +171,39 @@ stopVideo.addEventListener("click", () => {
 
 document.addEventListener('DOMContentLoaded', () => {
     const createInteractiveButton = document.getElementById('createInteractive');
-    const overlay = document.getElementById('overlay');
+    const overlay = document.getElementById('overlay'); 
     const closeModalButton = document.getElementById('closeModal');
-    const createQuizButton = document.getElementById('createQuiz');
     const createSurveyButton = document.getElementById('createSurvey');
     const surveyModal = document.getElementById('surveyModal');
     const closeSurveyModalButton = document.getElementById('closeSurveyModal');
     const startSurveyButton = document.getElementById('startSurvey');
-
     const surveyQuestionInput = document.getElementById('surveyQuestion');
     const predefinedAnswers = document.querySelectorAll('.predefined-answers p');
 
-    const socket = io();
-
     createInteractiveButton.addEventListener('click', () => {
         overlay.style.display = 'flex';
+        
     });
 
     closeModalButton.addEventListener('click', () => {
         overlay.style.display = 'none';
     });
 
-    createQuizButton.addEventListener('click', () => {
-        alert('Creating Quiz...');
-        overlay.style.display = 'none';
-    });
-
     createSurveyButton.addEventListener('click', () => {
         surveyModal.style.display = 'flex';
+        surveyQuestionInput.value = '';
     });
 
     closeSurveyModalButton.addEventListener('click', () => {
         surveyModal.style.display = 'none';
+        overlay.style.display = 'none';
     });
 
     startSurveyButton.addEventListener('click', () => {
         const question = surveyQuestionInput.value;
 
         if (!question) {
-            alert('Введите вопрос перед запуском опроса.');
+            alert('Enter a question before starting the survey.');
             return;
         }
 
@@ -201,15 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         console.log(surveyData);
 
-        if (surveyData) {
-            socket.emit("startSurvey", surveyData, (response) => {
-                if (response === 'sent') {
-                    console.log("Survey data sent to the server");
-                } else {
-                    console.log("Failed to send survey data");
-                }
-            });
-        }
+        socket.emit("startSurvey", surveyData);
 
         overlay.style.display = 'none';
         surveyModal.style.display = 'none';
@@ -217,56 +223,91 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+    const createQuizButton = document.getElementById('createQuiz');
+    const quizModal = document.getElementById('quizModal');
+    const closeQuizModalButton = document.getElementById('closeQuizModal');
+    const quizQuestionInput = document.getElementById('quizQuestion');
+    const quizOptionsContainer = document.getElementById('quizOptions');
+    const addOptionButton = document.getElementById('addOption');
+    const startQuizButton = document.getElementById('startQuiz');
+
+    createQuizButton.addEventListener('click', () => {
+        quizModal.style.display = 'flex';
+        quizOptions.innerHTML = '';
+        quizQuestionInput.value = '';
+    });
+
+    closeQuizModalButton.addEventListener('click', () => {
+        quizModal.style.display = 'none';
+        overlay.style.display = 'none';
+    });
+
+    addOptionButton.addEventListener('click', () => {
+        if (quizOptionsContainer.children.length < 4) {
+            const newOption = document.createElement('div');
+            newOption.classList.add('quiz-option');
+
+            const optionInput = document.createElement('input');
+            optionInput.type = 'text';
+            optionInput.classList.add('option-text');
+            optionInput.placeholder = 'Enter option';
+
+            const deleteButton = document.createElement('button');
+            deleteButton.classList.add('delete-option');
+            deleteButton.innerHTML = '&times;';
+
+            deleteButton.addEventListener('click', () => {
+                newOption.remove();
+            });
+
+            newOption.appendChild(optionInput);
+            newOption.appendChild(deleteButton);
+            quizOptionsContainer.appendChild(newOption);
+        } else {
+            alert('You can add up to 4 options');
+        }
+    });
+
+    startQuizButton.addEventListener('click', () => {
+        const quizQuestionInput = document.getElementById('quizQuestion');
+        const quizOptions = document.querySelectorAll('.quiz-option');
+
+        if (!quizQuestionInput.value || quizOptions.length < 2) {
+            const quizError = document.getElementById('quizError');
+            quizError.textContent = 'Correctly fill in quiz information.';
+            return;
+        }
+
+        const quizError = document.getElementById('quizError');
+        quizError.textContent = '';
+
+        overlay.style.display = 'none';
+        quizModal.style.display = 'none';
+    });
+});
+
+
 inviteButton.addEventListener("click", (e) => {
-  prompt(
-    "Copy this link and send it to people you want to meet with",
-    window.location.href
-  );
+    prompt(
+        "Copy this link and send it to people you want to meet with",
+        window.location.href
+    );
 });
 
 socket.on("receiveSurvey", (surveyData) => {
-    console.log("Получил surveyData от сервера");
-    displaySurveyModal(surveyData);
+  // Проверяем, не является ли текущий пользователь отправителем опроса
+  if (surveyData.senderUserId !== socket.id) {
+    // Отображаем модальное окно опроса
+      surveyModal.style.display = 'flex';
+      surveyQuestion.innerHTML = surveyData[0];
+      surveyData.options.forEach(option => {
+          const answerOption = document.createElement('p');
+          answerOption.textContent = option;
+          predefinedAnswers.appendChild(answerOption);
+      });
+  }
 });
-
-function displaySurveyModal(surveyData) {
-    // Получаем HTML-элементы из DOM
-    const incomingSurveyModal = document.getElementById('surveyModal');
-    const incomingSurveyQuestionInput = document.getElementById('surveyQuestionInput');
-    const incomingPredefinedAnswers = document.getElementById('predefinedAnswers');
-    const incomingAnswerSurveyButton = document.getElementById('answerSurveyButton');
-    const incomingCloseSurveyModalButton = document.getElementById('closeSurveyModalButton');
-
-    // Устанавливаем текст вопроса
-    incomingSurveyQuestionInput.textContent = surveyData.question;
-
-    // Создаем элементы для вариантов ответа
-    incomingPredefinedAnswers.innerHTML = "";
-    surveyData.options.forEach(option => {
-        const answerOption = document.createElement('p');
-        answerOption.textContent = option;
-        answerOption.addEventListener('click', () => {
-            // Отправляем ответ на сервер
-            socket.emit("submitSurveyAnswer", { question: surveyData.question, answer: option });
-            // Закрываем модальное окно опроса
-            incomingSurveyModal.style.display = 'none';
-        });
-        incomingPredefinedAnswers.appendChild(answerOption);
-    });
-
-    // Устанавливаем обработчик для кнопки закрытия
-    incomingCloseSurveyModalButton.addEventListener('click', () => {
-        incomingSurveyModal.style.display = 'none';
-    });
-
-    // Устанавливаем обработчик для кнопки ответа
-    incomingAnswerSurveyButton.addEventListener('click', () => {
-        alert('Пожалуйста, выберите один из вариантов ответа.');
-    });
-
-    // Отображаем модальное окно
-    incomingSurveyModal.style.display = 'flex';
-}
 
 socket.on("createMessage", (message, userName) => {
   messages.innerHTML =

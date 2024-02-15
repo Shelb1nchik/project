@@ -21,7 +21,7 @@
         <h3>Video Chat</h2>
       </div>
     </div>  
-    <div class="main">  
+    <div class="main">
     <div class="main__left">
       <div class="videos__group">
         <div id="video-grid">
@@ -44,23 +44,40 @@
           <div id="inviteButton" class="options__button">
             <i class="fas fa-user-plus"></i>
           </div>
+          <div class "video-control" id "video-control">
+            <button id="stopScreenShareButton" class="hidden">Stop Demonstration</button>
+          </div>
+          <button id="startScreenShareButton" class="options__button">Start Screen Share</button>
           <div id="createInteractive" class="options__button">Create Interactive</div>
           <div class="overlay" id="overlay">
             <div class="modal">
               <button id="closeModal" class="close-button">&times;</button>
-              <h2>Select Interactive Type</h2>
-              <button id="createQuiz">Create Quiz</button>
-              <button id="createSurvey">Create Survey</button>
-              <div id="surveyModal">
-                <button id="closeSurveyModal" class="close-button">&times;</button>
-                <h2>Create Survey</h2>
-                <input type="text" id="surveyQuestion" placeholder="Enter your question">
-                <div class="predefined-answers">
-                  <p>Yes</p>
-                  <p>Almost</p>
-                  <p>No</p>
+              <div class ="interactive-menu">
+                <h2>Select Interactive Type</h2>
+                <button id="createQuiz">Create Quiz</button>
+                <div id="quizModal" class="sub-menu">
+                  <button id="closeQuizModal">&times;</button>
+                  <h2>Create Quiz</h2>
+                  <label for="quizQuestion">Question:</label>
+                  <input type="text" id="quizQuestion" placeholder="Enter your question">
+                  <div id="quizOptions">
+                  </div>
+                  <button id="addOption">Add Option</button>
+                  <button id="startQuiz">Start Quiz</button>
+                  <p id="quizError" class="error-message"></p>
                 </div>
-                <button id="startSurvey">Start a survey</button>
+                <button id="createSurvey">Create Survey</button>
+                <div id="surveyModal" class="sub-menu">
+                  <button id="closeSurveyModal" class="close-button">&times;</button>
+                  <h2>Create Survey</h2>
+                  <input type="text" id="surveyQuestion" placeholder="Enter your question">
+                  <div class="predefined-answers">
+                    <p>Yes</p>
+                    <p>Almost</p>
+                    <p>No</p>
+                  </div>
+                  <button id="startSurvey">Start a survey</button>
+                </div>
               </div>
             </div>
           </div>

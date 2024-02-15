@@ -8,7 +8,13 @@
   font-family: "Poppins", sans-serif;
 }
 
-button {
+#createSurvey {
+    font-size: 16px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+#createQuiz {
     font-size: 16px;
     padding: 10px;
     cursor: pointer;
@@ -45,6 +51,32 @@ button {
     color: #ff0000;
 }
 
+#quizModal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    flex-direction: column;
+    width: 400px;
+    width: 400px;
+}
+
+#closeQuizModal {
+    position: absolute;
+    top: 1px;
+    right: 7px;
+    font-size: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #ff0000;
+}
+
 #surveyModal {
     display: none;
     position: fixed;
@@ -68,6 +100,21 @@ button {
     border: none;
     cursor: pointer;
     color: #ff0000;
+}
+
+#addOption {
+    background-color: red;
+    color: black;
+    padding: 10px 20px;
+    border: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 20px;
+    transition: background-color 0.3s;
+}
+
+#addOption:hover {
+    background-color: darkred;
 }
 
 #surveyModal h2 {
@@ -115,30 +162,6 @@ button {
     background-color: #45a049;
 }
 
-#incomingSurveyModal {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    text-align: center;
-}
-
-#incomingSurveyQuestionInput {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-
-#incomingPredefinedAnswers {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
 #predefinedAnswers p {
     cursor: pointer;
     padding: 10px;
@@ -147,29 +170,29 @@ button {
     border-radius: 5px;
 }
 
-#incomingPredefinedAnswers p:hover {
-    background-color: #1c5ca8;
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
 }
 
-#incomingAnswerSurveyButton {
-    cursor: pointer;
-    padding: 10px;
-    background-color: #2f80ec;
-    color: #fff;
-    border-radius: 5px;
+.modal {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
 }
 
-#incomingAnswerSurveyButton:hover {
-    background-color: #1c5ca8;
-}
-
-#incomingCloseSurveyModalButton {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
-    font-size: 20px;
-    color: #2f80ec;
+.sub-menu {
+    display: none;
+    flex-direction: column;
+    margin-top: 20px; /* Добавьте необходимый отступ между подменю и предыдущим элементом */
 }
 
 * {
@@ -204,25 +227,42 @@ button {
 }
 
 .videos__group {
-  flex-grow: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 1rem;
-  background-color: var(--main-dark);
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    background-color: var(--main-dark);
+    transform: scaleX(-1);
+}
+
+.hidden {
+    display: none;
+}
+
+#stopScreenShareButton {
+  padding: 10px 15px;
+  background-color: #d9534f;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#stopScreenShareButton:hover {
+  background-color: #c9302c;
 }
 
 video {
-  height: 300px;
-  border-radius: 1rem;
-  margin: 0.5rem;
-  width: 400px;
-  object-fit: cover;
-  transform: rotateY(180deg);
-  -webkit-transform: rotateY(180deg);
-  -moz-transform: rotateY(180deg);
+    height: 300px;
+    border-radius: 1rem;
+    margin: 0.5rem;
+    width: 400px;
+    object-fit: cover;
+    transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg);
+    -moz-transform: rotateY(180deg);
 }
-
 .options {
   padding: 1rem;
   display: flex;
@@ -249,6 +289,7 @@ video {
   font-size: 1.2rem;
   width: 50px;
   margin: 0 0.5rem;
+  cursor: pointer;
 }
 
 .background__red {
@@ -327,11 +368,20 @@ video {
   display: none;
 }
 
+#startScreenShareButton {
+    font-size: 18px;
+    padding: 10px 10px;
+    width: auto;
+    height: auto;
+    cursor: pointer;
+}
+
 #createInteractive {
     font-size: 18px;
     padding: 10px 10px;
     width: auto;
     height: auto;
+    cursor: pointer;
 }
 
 .header__back {
@@ -341,6 +391,103 @@ video {
   top: 17px;
   left: 28px;
   color: #fff;
+}
+
+#quizModal {
+    display: none;
+}
+
+#quizModal .modal {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+#quizModal input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+}
+
+#quizOptions {
+    display: flex;
+    flex-direction: column;
+}
+
+#quizOptions input {
+    margin-bottom: 10px;
+}
+
+.delete-option {
+    background-color: transparent;
+    border: none;
+    color: purple;
+    cursor: pointer;
+    font-size: 20px;
+    margin-left: 10px; /* Расстояние между вариантом ответа и кнопкой удаления */
+}
+
+/* Разместите элементы в строку, чтобы кнопка удаления была справа от варианта ответа */
+.quiz-option {
+    display: flex;
+    align-items: center;
+}
+
+#startQuiz {
+    background-color: red;
+    color: black;
+    padding: 15px;
+    border: none;
+    font-size: 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+#startQuiz:hover {
+    background-color: darkred;
+}
+
+/*
+.screen-share-container {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    z-index: 100;
+    transform: scaleX(-1);
+}
+*/
+
+/*
+.screen-share-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+*/
+
+/*
+.screen-share-video {
+    max-width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    transform: scaleX(-1);
+}
+*/
+
+#createInteractive:hover {
+    background-color: #0056b3;
+}
+
+#startScreenShareButton:hover {
+  background-color: #0056b3;
 }
 
 @media (max-width: 700px) {
